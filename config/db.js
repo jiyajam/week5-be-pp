@@ -3,16 +3,19 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Use your own MongoDB URI here or put it in .env as MONGO_URI
-    const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/tours-db';
+    const mongoURI = process.env.MONGO_URI;
 
-    await mongoose.connect(mongoURI, {
-      // options are optional in newer Mongoose versions
-    });
+    // Helpful error if MONGO_URI is missing
+    if (!mongoURI) {
+      throw new Error("MONGO_URI is not defined in .env file");
+    }
 
-    console.log('MongoDB connected');
+    // Connect to MongoDB
+    await mongoose.connect(mongoURI);
+
+    console.log("MongoDB connected");
   } catch (error) {
-    console.error('MongoDB connection error:', error.message);
+    console.error("MongoDB connection error:", error.message);
     process.exit(1); // stop the app if DB connection fails
   }
 };
